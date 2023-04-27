@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(dinn_demo)
+project(compare_demo)
  
  
 
@@ -21,10 +21,10 @@ include_directories(${CMAKE_SOURCE_DIR}/src/libs/ubuntu/include/hesea/binfhe)
 include_directories(${CMAKE_SOURCE_DIR}/src/libs/ubuntu/include/hesea/cereal)
 
 
-add_executable(dinn_demo  ${SOURCE_FILES})
+add_executable(compare_demo  ${SOURCE_FILES})
 
  
-target_link_libraries(dinn_demo  
+target_link_libraries(compare_demo  
 ${CMAKE_SOURCE_DIR}/src/libs/ubuntu/lib/libHESEApke.so
 ${CMAKE_SOURCE_DIR}/src/libs/ubuntu/lib/libHESEAcore.so
 ${CMAKE_SOURCE_DIR}/src/libs/ubuntu/lib/libHESEAbinfhe.so)
