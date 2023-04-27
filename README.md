@@ -19,9 +19,7 @@
 
 ## Introduction
 
-This is a demonstration for secure handwritting digit recognition using [HESEA library](https://github.com/Privasea/HESEA_Lib). We use the scheme describe on the paper [Fast Homomorphic Evaluation of Deep Discretized Neural Networks](https://eprint.iacr.org/2017/1114.pdf). It presents an approach for privacy-preserving deep learning using the TFHE encryption scheme. The main advantage of DINN is that it achieves competitive accuracy while maintaining normal operational efficiency thanks to its innovative use of Discretized Neural Networks. These networks quantize the weights and biases, reducing the complexity of the underlying computations and simplifying the TFHE bootstrapping procedure. As a result, the homomorphic evaluation is further improved, leading to enhanced efficiency.
-
-In this demo, the client first homomorphically encrypt a handwritten digital image locally and then transmit the encrypted data to the server. Upon receiving the ciphertext, the server runs the neural network recognition algorithm in the ciphertext domain, obtains the encrypted recognition result, and returns it to the client. The client can then decrypt the encrypted recognition result to obtain the correct output.
+This is a demonstration of ciphertext sorting using the [HESEA library](https://github.com/Privasea/HESEA_Lib). In this demo program, you need to enter the sequence of plaintexts to be sorted. Then, the program encrypts the plaintext sequence into the corresponding ciphertext sequence, and sorts the sequence by comparing the size on the ciphertext sequence. Then decrypt the ciphertext sequence and output the sorted plaintext sequence.
 
 
 # Running
@@ -49,4 +47,4 @@ make
 ```
 
 # Remark
-This is only a demostration for handwritting digit recognition and please do not use it in any mature product.
+
