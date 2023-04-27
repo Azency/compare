@@ -31,7 +31,7 @@ Dependencies:
 after installed the HESEA lib, run with the command:
 
 ```
-gcc -xc++ -lstdc++ -shared-libgcc compare_demo.cpp -o compare_demo -I /usr/local/include/hesea  -L /usr/local/lib -libHESEApke.so
+gcc -xc++ -lstdc++ -shared-libgcc compare.cpp -o compare_demo -I /usr/local/include/hesea  -L /usr/local/lib -libHESEApke.so
 
 ./compare_demo
 ```
