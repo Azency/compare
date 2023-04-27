@@ -1,4 +1,4 @@
-# Handwritting Digit Recognition Demo
+# Sorting Ciphertext Demo
 
 <p align="center">
   <a href="https://www.privasea.ai"><img src="https://github.com/Privasea/Miscellaneous/blob/3be7ff3c2d9f7e955e80f6637b5098fdb4583e3a/Figures/Logo/Privasea-Logo.jpg" width=40%  /></a>
@@ -35,7 +35,7 @@ after installed the HESEA lib, run with the command:
 ```
 gcc -xc++ -lstdc++ -shared-libgcc dinn_demo.cpp -o nn_multi_pke -I /usr/local/include/hesea  -L /usr/local/lib -libHESEApke.so
 
-./nn_multi_pke
+./compare_demo
 ```
 
 or you can build this demo by camke as follow
@@ -45,7 +45,7 @@ mkdir build
 cd build
 cmake ..
 make
-./dinn_demo
+./compare_demo
 ```
 
 # Remark
