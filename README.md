@@ -19,7 +19,7 @@
 
 ## Introduction
 
-This is a demonstration of ciphertext sorting using the [HESEA library](https://github.com/Privasea/HESEA_Lib). In this demo program, you need to enter the sequence of plaintexts to be sorted. Then, the program encrypts the plaintext sequence into the corresponding ciphertext sequence, and sorts the sequence by comparing the size on the ciphertext sequence. Then decrypt the ciphertext sequence and output the sorted plaintext sequence.
+This is a demonstration of ciphertext sorting using the [HESEA library](https://github.com/Privasea/HESEA_Lib). In this demo program, you need to enter the sequence of plaintexts you want to be sorted. Then, the program encrypts the plaintext sequence into the corresponding ciphertext sequence, and sorts the sequence by comparing ciphertext sequence. Then decrypt the ciphertext sequence and output the sorted plaintext sequence.
 
 
 # Running

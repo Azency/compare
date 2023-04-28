@@ -2,6 +2,7 @@
 #include "cryptocontext.h"
 #include "lwecore.h"
 #include "math/backend.h"
+#include "ringcore.h"
 #include <algorithm>
 #include <bits/types/time_t.h>
 #include <stdio.h>
@@ -40,21 +41,23 @@ vector<LWECiphertext> sort(vector<LWECiphertext>& series, bool ascending, Crypto
 int main(){
     vector<int> original_data;
     int number;
-
-    cout<<"input the number series"<<endl;
-    while (cin>>number) {
-        original_data.push_back(number);
-        cout<<"enter q to exit"<<endl;
-    }
-    cout<<"your input data are :" << original_data<<endl;
+    bool is_ascending = true;
 
 
     //! binfhecontext strat
     auto cc = CryptoContextImpl<DCRTPoly>();
 
     int p = 512;
-
-    cc.Generate_Default_params();
+    int N = 1024;
+    int n = 128;
+    int q_bits = 30;
+    int qKS_bits = 30;
+    int Q_bits = 55;
+    int baseG_Q = 1<<15; 
+    int baseKS = 1<<3; 
+    int baseR = 2;
+    NativeInteger Q = PreviousPrime<NativeInteger>(FirstPrime<NativeInteger>(Q_bits, 2*N), 2*N);
+    cc.HESea_GenerateBinFHEContext(n, N, NativeInteger(1<<q_bits), Q, NativeInteger(1ull<<qKS_bits), 0, baseKS, baseG_Q, baseR, lbcrypto::GINX);
     int q = cc.HESea_GetParams()->GetLWEParams()->Getq().ConvertToInt();
     // Sample Program: Step 2: Key Generation
     // Generate the secret key
@@ -68,32 +71,39 @@ int main(){
     std::cout << "Completed the key generation." << std::endl;
 
 
+    cout<<"input the number series between [0,128) (enter q to exit) :"<<endl;
+    while (cin>>number) {
+        original_data.push_back(number);
+        cout<<"(enter q to exit):"<<endl;
+    }
+    cout<<"your input "<< original_data.size() << " numbers totaly, they are "<< original_data<<endl;
+
+
+
 
     //! encrypt the number series
     vector<LWECiphertext> enc_data;
-    cout << "encrypt numbers needed to be arranged" << endl;
+    cout << "encrypt numbers needed to be sorted" << endl;
     for(int i = 0; i < original_data.size(); i++){
         enc_data.push_back( cc.HESea_Encrypt(sk, original_data[i], p));
     }
-    cout<<"enc_data.size() is "<<enc_data.size()<<endl;
 
     //! sort the series
-    cout << "sort the data series" << endl;
-    vector<LWECiphertext> sorted_enc_data = sort(enc_data, false, cc, p, sk);
+    cout << "sort the ciphertext sequence " << endl;
+    vector<LWECiphertext> sorted_enc_data = sort(enc_data, is_ascending, cc, p, sk);
 
     //! decrypt the series
-    cout << "data after sorted are :"<<endl;
+    
     vector<int> sorted_original_data;
     for(int i = 0; i < sorted_enc_data.size(); i++){
         LWEPlaintext temp;
         cc.HESea_Decrypt(sk, sorted_enc_data[i], &temp, p);
         int temp_int = temp>= p/2 ? temp - p : temp;
         sorted_original_data.push_back(temp_int);
-        cout<<temp<<"    ";
     }
 
-    cout<<endl;
-
+    cout << "data after sorted are :"<< sorted_original_data <<endl;
+    return 0;
 
 
 
@@ -107,15 +117,18 @@ int main(){
 bool comparexby(LWECiphertext x, LWECiphertext y, CryptoContextImpl<DCRTPoly>& cc, int p, LWEPrivateKey sk){
     NativeInteger q = x->GetA().GetModulus();
     LWECiphertext temp = make_shared<LWECiphertextImpl>(*x);
-    temp->SetA(y->GetA().ModSub(x->GetA()));
-    temp->SetB(y->GetB().ModSub(x->GetB(), q));
+    temp->SetA(y->GetA().ModMul(2).ModSub(x->GetA().ModMul(2)));
+    temp->SetB(y->GetB().ModMul(2, q).ModSub(x->GetB().ModMul(2, q), q));
+
+    // temp->SetA(y->GetA().ModSub(x->GetA()));
+    // temp->SetB(y->GetB().ModSub(x->GetB(), q));
 
     auto ct_sign = cc.HESea_MyEvalSigndFunc(temp, p);
 
     LWEPlaintext sign;
 
     cc.HESea_Decrypt(sk, ct_sign, &sign, p);
-    sign = sign >= p/2 ? 0 : 1;
+    sign = sign >= p/2 ? 1 : 0;
 
     return bool(sign);
 }
@@ -131,7 +144,7 @@ vector<LWECiphertext> sort(vector<LWECiphertext>& series, bool ascending, Crypto
     for(int i = 1; i < n; i++){
         bool flag = false;
         for(int j = 0; j < n - i; j++){
-            if(comparexby(series[index[j]], series[index[j]], cc, p, sk)){
+            if(comparexby(series[index[j]], series[index[j+1]], cc, p, sk)){
                 int temp = index[j];
                 index[j] = index[j+1];
                 index[j+1] = temp;
