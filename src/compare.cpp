@@ -71,6 +71,7 @@ int main(){
     std::cout << "Completed the key generation." << std::endl;
 
 
+    //! input number series
     cout<<"input the number series between [0,128) (enter q to exit) :"<<endl;
     while (cin>>number) {
         original_data.push_back(number);
@@ -88,12 +89,13 @@ int main(){
         enc_data.push_back( cc.HESea_Encrypt(sk, original_data[i], p));
     }
 
+
     //! sort the series
     cout << "sort the ciphertext sequence " << endl;
     vector<LWECiphertext> sorted_enc_data = sort(enc_data, is_ascending, cc, p, sk);
 
+
     //! decrypt the series
-    
     vector<int> sorted_original_data;
     for(int i = 0; i < sorted_enc_data.size(); i++){
         LWEPlaintext temp;
@@ -105,15 +107,10 @@ int main(){
     cout << "data after sorted are :"<< sorted_original_data <<endl;
     return 0;
 
-
-
-
-
-    
 }
 
 
-
+//! compare x>y? if true return true else false
 bool comparexby(LWECiphertext x, LWECiphertext y, CryptoContextImpl<DCRTPoly>& cc, int p, LWEPrivateKey sk){
     NativeInteger q = x->GetA().GetModulus();
     LWECiphertext temp = make_shared<LWECiphertextImpl>(*x);
@@ -133,6 +130,9 @@ bool comparexby(LWECiphertext x, LWECiphertext y, CryptoContextImpl<DCRTPoly>& c
     return bool(sign);
 }
 
+
+
+//! sort the series using Bubbling sorting
 vector<LWECiphertext> sort(vector<LWECiphertext>& series, bool ascending, CryptoContextImpl<DCRTPoly>& cc, int p, LWEPrivateKey sk){
     int n = series.size();
     int * index = new int[n];
@@ -151,7 +151,6 @@ vector<LWECiphertext> sort(vector<LWECiphertext>& series, bool ascending, Crypto
                 flag = true;
             }
         }
-
         if(!flag){
             break;
         }
